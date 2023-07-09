@@ -1,8 +1,20 @@
-import styled from "styled-components"
-import { BiExit } from "react-icons/bi"
-import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai"
+import styled from 'styled-components'
+import { BiExit } from 'react-icons/bi'
+import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 export default function HomePage() {
+  const [data, setData] = useState({})
+  const token = localStorage.getItem('token')
+
+  useEffect(() => {
+    axios
+      .post(`${import.meta.env.VITE_API_URL}`)
+      .then(res => console.log('data:', data))
+      .catch(err => console.error(err.response.data))
+  }, [])
+
   return (
     <HomeContainer>
       <Header>
@@ -17,7 +29,7 @@ export default function HomePage() {
               <span>30/11</span>
               <strong>Almoço mãe</strong>
             </div>
-            <Value color={"negativo"}>120,00</Value>
+            <Value color={'negativo'}>120,00</Value>
           </ListItemContainer>
 
           <ListItemContainer>
@@ -25,28 +37,31 @@ export default function HomePage() {
               <span>15/11</span>
               <strong>Salário</strong>
             </div>
-            <Value color={"positivo"}>3000,00</Value>
+            <Value color={'positivo'}>3000,00</Value>
           </ListItemContainer>
         </ul>
 
         <article>
           <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
+          <Value color={'positivo'}>2880,00</Value>
         </article>
       </TransactionsContainer>
-
 
       <ButtonsContainer>
         <button>
           <AiOutlinePlusCircle />
-          <p>Nova <br /> entrada</p>
+          <p>
+            Nova <br /> entrada
+          </p>
         </button>
         <button>
           <AiOutlineMinusCircle />
-          <p>Nova <br />saída</p>
+          <p>
+            Nova <br />
+            saída
+          </p>
         </button>
       </ButtonsContainer>
-
     </HomeContainer>
   )
 }
@@ -76,7 +91,7 @@ const TransactionsContainer = styled.article`
   justify-content: space-between;
   article {
     display: flex;
-    justify-content: space-between;   
+    justify-content: space-between;
     strong {
       font-weight: 700;
       text-transform: uppercase;
@@ -88,7 +103,7 @@ const ButtonsContainer = styled.section`
   margin-bottom: 0;
   display: flex;
   gap: 15px;
-  
+
   button {
     width: 50%;
     height: 115px;
@@ -105,7 +120,7 @@ const ButtonsContainer = styled.section`
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  color: ${props => (props.color === 'positivo' ? 'green' : 'red')};
 `
 const ListItemContainer = styled.li`
   display: flex;
