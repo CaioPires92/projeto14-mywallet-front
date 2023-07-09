@@ -9,6 +9,8 @@ export default function SignInPage() {
   const [form, setForm] = useState({ email: '', senha: '' })
   const { user, setUser } = useContext(UserContext)
 
+  console.log('dados do context', user)
+
   const navigate = useNavigate()
 
   function handleForm(e) {
@@ -21,7 +23,8 @@ export default function SignInPage() {
 
     ApiAuth.login(form)
       .then(res => {
-        const token = res.data
+        const { nome, token } = res.data
+        setUser({ nome, token })
         localStorage.setItem('token', token)
 
         navigate('/home')

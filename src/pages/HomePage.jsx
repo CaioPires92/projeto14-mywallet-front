@@ -1,24 +1,32 @@
 import styled from 'styled-components'
 import { BiExit } from 'react-icons/bi'
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
+import { UserContext } from '../context/userContext'
 
 export default function HomePage() {
   const [data, setData] = useState({})
   const token = localStorage.getItem('token')
+  const { user } = useContext(UserContext)
+
+  console.log('dados', data)
 
   useEffect(() => {
     axios
-      .post(`${import.meta.env.VITE_API_URL}`)
-      .then(res => console.log('data:', data))
+      .get(`${import.meta.env.VITE_API_URL}/home`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(res => setData(res.data))
       .catch(err => console.error(err.response.data))
   }, [])
 
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Fulano</h1>
+        <h1>{user.nome}</h1>
         <BiExit />
       </Header>
 

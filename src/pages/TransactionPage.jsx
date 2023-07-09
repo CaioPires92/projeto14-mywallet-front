@@ -1,11 +1,11 @@
-import styled from "styled-components"
+import styled from 'styled-components'
 
 export default function TransactionsPage() {
   return (
     <TransactionsContainer>
       <h1>Nova TRANSAÇÃO</h1>
       <form>
-        <input placeholder="Valor" type="text"/>
+        <input placeholder="Valor" type="text" />
         <input placeholder="Descrição" type="text" />
         <button>Salvar TRANSAÇÃO</button>
       </form>
