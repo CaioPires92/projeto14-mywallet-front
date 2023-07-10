@@ -2,26 +2,52 @@ import styled from 'styled-components'
 import { BiExit } from 'react-icons/bi'
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from 'react-icons/ai'
 import { useContext, useEffect, useState } from 'react'
-import axios from 'axios'
 import { UserContext } from '../context/userContext'
+import apiTransactions from '../services/apiTransactions'
 
 export default function HomePage() {
-  const [data, setData] = useState({})
-  const token = localStorage.getItem('token')
+  const [transactions, setTransactions] = useState([])
+  // const token = localStorage.getItem('token')
   const { user } = useContext(UserContext)
 
-  console.log('dados', data)
+  useEffect(getTransactionsList, [])
 
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/home`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+  function getTransactionsList() {
+    apiTransactions
+      .getTransactions(user.token)
+      .then(res => {
+        const apiTransactions = res.data
+        setTransactions(apiTransactions)
+        console.log(transactions)
       })
-      .then(res => setData(res.data))
-      .catch(err => console.error(err.response.data))
-  }, [])
+      .catch(err => {
+        console.log(err.response.data)
+      })
+  }
+
+  function calculateBalanceColor() {
+    const total = transactions.reduce((acc, transaction) => {
+      if (transaction.tipo === 'entrada') {
+        return acc + parseFloat(transaction.valor)
+      } else {
+        return acc - parseFloat(transaction.valor)
+      }
+    }, 0)
+
+    return total >= 0 ? 'positivo' : 'negativo'
+  }
+
+  function calculateBalance() {
+    const total = transactions.reduce((acc, transaction) => {
+      if (transaction.tipo === 'entrada') {
+        return acc + parseFloat(transaction.valor)
+      } else {
+        return acc - parseFloat(transaction.valor)
+      }
+    }, 0)
+
+    return total.toFixed(2)
+  }
 
   return (
     <HomeContainer>
@@ -32,26 +58,24 @@ export default function HomePage() {
 
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={'negativo'}>120,00</Value>
-          </ListItemContainer>
-
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={'positivo'}>3000,00</Value>
-          </ListItemContainer>
+          {transactions.map(transaction => (
+            <ListItemContainer key={transaction.id}>
+              <div>
+                <span>{transaction.data}</span>
+                <strong>{transaction.descricao}</strong>
+              </div>
+              <Value
+                color={transaction.tipo === 'entrada' ? 'positivo' : 'negativo'}
+              >
+                {parseFloat(transaction.valor).toFixed(2)}
+              </Value>
+            </ListItemContainer>
+          ))}
         </ul>
 
         <article>
           <strong>Saldo</strong>
-          <Value color={'positivo'}>2880,00</Value>
+          <Value color={calculateBalanceColor()}>{calculateBalance()}</Value>
         </article>
       </TransactionsContainer>
 
