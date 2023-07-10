@@ -52,8 +52,8 @@ export default function HomePage() {
   return (
     <HomeContainer>
       <Header>
-        <h1>{user.nome}</h1>
-        <BiExit />
+        <h1 data-test="user-name">{user.nome}</h1>
+        <BiExit data-test="logout" />
       </Header>
 
       <TransactionsContainer>
@@ -62,9 +62,12 @@ export default function HomePage() {
             <ListItemContainer key={transaction.id}>
               <div>
                 <span>{transaction.data}</span>
-                <strong>{transaction.descricao}</strong>
+                <strong data-test="registry-name">
+                  {transaction.descricao}
+                </strong>
               </div>
               <Value
+                data-test="registry-amount"
                 color={transaction.tipo === 'entrada' ? 'positivo' : 'negativo'}
               >
                 {parseFloat(transaction.valor).toFixed(2)}
@@ -75,20 +78,22 @@ export default function HomePage() {
 
         <article>
           <strong>Saldo</strong>
-          <Value color={calculateBalanceColor()}>{calculateBalance()}</Value>
+          <Value data-test="total-amount" color={calculateBalanceColor()}>
+            {calculateBalance()}
+          </Value>
         </article>
       </TransactionsContainer>
 
       <ButtonsContainer>
         <button>
           <AiOutlinePlusCircle />
-          <p>
+          <p data-test="new-income">
             Nova <br /> entrada
           </p>
         </button>
         <button>
           <AiOutlineMinusCircle />
-          <p>
+          <p data-test="new-expense">
             Nova <br />
             saída
           </p>

@@ -37,6 +37,7 @@ export default function SignInPage() {
       <form onSubmit={handleLogin}>
         <MyWalletLogo />
         <input
+          data-test="email"
           name="email"
           placeholder="E-mail"
           type="email"
@@ -45,6 +46,7 @@ export default function SignInPage() {
           onChange={handleForm}
         />
         <input
+          data-test="password"
           name="senha"
           placeholder="Senha"
           type="password"
@@ -54,7 +56,9 @@ export default function SignInPage() {
           onChange={handleForm}
           autoComplete="new-password"
         />
-        <button type="submit">Entrar</button>
+        <button data-test="sign-in-submit" type="submit">
+          Entrar
+        </button>
       </form>
 
       <Link to={'/cadastro'}>Primeira vez? Cadastre-se!</Link>
